@@ -1,8 +1,12 @@
-import { Button } from "@/components/ui/button";
-import { VehicleList } from "@/components/VehicleList";
-import type { Vehicle } from "@/types";
-import { PlusCircle } from "lucide-react";
-import Link from "next/link";
+import { VehicleForm } from "@/components/VehicleForm";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Vehicle } from "@/types";
 import { subDays, addDays } from "date-fns";
 
 const today = new Date();
@@ -42,19 +46,31 @@ const mockVehicles: Vehicle[] = [
   },
 ];
 
+export default function EditVehiclePage({ params }: { params: { id: string } }) {
+  const vehicle = mockVehicles.find((v) => v.id === params.id);
 
-export default function DashboardPage() {
-  return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <h2 className="text-3xl font-bold tracking-tight font-headline">Dashboard</h2>
-        <Link href="/add-vehicle" passHref>
-          <Button>
-            <PlusCircle className="mr-2 h-4 w-4" /> Add Vehicle
-          </Button>
-        </Link>
+  if (!vehicle) {
+    return (
+      <div className="text-center">
+        <h2 className="text-2xl font-bold">Vehicle not found</h2>
+        <p className="text-muted-foreground">The requested vehicle could not be found.</p>
       </div>
-      <VehicleList vehicles={mockVehicles} />
+    );
+  }
+
+  return (
+    <div className="max-w-2xl mx-auto">
+      <Card>
+        <CardHeader>
+          <CardTitle className="font-headline">Edit Vehicle Details</CardTitle>
+          <CardDescription>
+            Update the details for {vehicle.name}.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <VehicleForm initialData={vehicle} />
+        </CardContent>
+      </Card>
     </div>
   );
 }
